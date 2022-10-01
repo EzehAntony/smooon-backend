@@ -5,10 +5,8 @@ const http = require("http");
 const cookie_parser = require("cookie-parser");
 const env = require("dotenv").config();
 
-const cookie_parser = require("cookie-parser");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
-const cors = require("cors");
 
 app.use(cookie_parser());
 app.set("trust proxy", 1);
