@@ -1,38 +1,34 @@
-const app = require("express")();
-const cors = require("cors");
+const express = require("express");
+const app = express();
 const mongoose = require("mongoose");
-const http = require("http");
+const dotenv = require("dotenv").config();
 const cookie_parser = require("cookie-parser");
-const env = require("dotenv").config();
-
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/users");
+const cors = require("cors");
 
 app.use(cookie_parser());
+app.use(express.json());
 app.set("trust proxy", 1);
-
-const server = http.createServer(app, {
-  cors: {
-    origin: [
-      "http://localhost:4000",
-      "https://smooon.vercel.app",
-      "https://smooon.netlify.app",
-    ],
-  },
-});
-
 mongoose
   .connect(process.env.url)
   .then(() => {
-    console.log("connected to the database");
+    console.log("Successfully connected to the database.");
   })
   .catch((err) => {
     console.log(err);
   });
 
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000", "https://smooon.vercel.app"],
+  })
+);
+
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
 
-server.listen(process.env.port, () => {
-  console.log("Server is now running");
+app.listen(process.env.PORT || 5000, () => {
+  console.log("Backend server is now running");
 });
